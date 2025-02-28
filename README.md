@@ -8,26 +8,41 @@
 
 ![modelo fisico](https://github.com/user-attachments/assets/7870ba7e-aa88-48a4-a6d0-18df89c3e1fe)
 
-SQP SCRIPT 
+# Base de Datos: ConcesionarioDB
+
+Este archivo describe la estructura de la base de datos `ConcesionarioDB`, utilizada para gestionar la venta de vehículos, mantenimiento y clientes de un concesionario.
+
+## Estructura de la Base de Datos
+
+### Creación de la Base de Datos
+```sql
 CREATE DATABASE ConcesionarioDB;
 USE ConcesionarioDB;
+```
 
--- Tabla INVENTARIO
+### Tablas y Relaciones
+
+#### Tabla INVENTARIO
+```sql
 CREATE TABLE INVENTARIO (
     idInventario INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     descripcion TEXT
 );
+```
 
--- Tabla CONCESIONARIO
+#### Tabla CONCESIONARIO
+```sql
 CREATE TABLE CONCESIONARIO (
     idConcesionario INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     direccion VARCHAR(255),
     telefono VARCHAR(20)
 );
+```
 
--- Tabla VEHICULOS
+#### Tabla VEHICULOS
+```sql
 CREATE TABLE VEHICULOS (
     idVehiculo INT PRIMARY KEY AUTO_INCREMENT,
     marca VARCHAR(50) NOT NULL,
@@ -40,8 +55,10 @@ CREATE TABLE VEHICULOS (
     FOREIGN KEY (idInventario) REFERENCES INVENTARIO(idInventario),
     FOREIGN KEY (idConcesionario) REFERENCES CONCESIONARIO(idConcesionario)
 );
+```
 
--- Tabla VENDEDORES
+#### Tabla VENDEDORES
+```sql
 CREATE TABLE VENDEDORES (
     idVendedor INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
@@ -49,8 +66,10 @@ CREATE TABLE VENDEDORES (
     telefono VARCHAR(20),
     email VARCHAR(100) UNIQUE
 );
+```
 
--- Tabla CLIENTES
+#### Tabla CLIENTES
+```sql
 CREATE TABLE CLIENTES (
     idCliente INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
@@ -58,8 +77,10 @@ CREATE TABLE CLIENTES (
     telefono VARCHAR(20),
     email VARCHAR(100) UNIQUE
 );
+```
 
--- Tabla VENTAS
+#### Tabla VENTAS
+```sql
 CREATE TABLE VENTAS (
     idVenta INT PRIMARY KEY AUTO_INCREMENT,
     fecha DATE NOT NULL,
@@ -71,8 +92,10 @@ CREATE TABLE VENTAS (
     FOREIGN KEY (idCliente) REFERENCES CLIENTES(idCliente),
     FOREIGN KEY (idTipoPago) REFERENCES TIPO_PAGO(idTipoPago)
 );
+```
 
--- Tabla DETALLE_VENTA
+#### Tabla DETALLE_VENTA
+```sql
 CREATE TABLE DETALLE_VENTA (
     idDetalle INT PRIMARY KEY AUTO_INCREMENT,
     idVenta INT,
@@ -81,8 +104,10 @@ CREATE TABLE DETALLE_VENTA (
     FOREIGN KEY (idVenta) REFERENCES VENTAS(idVenta),
     FOREIGN KEY (idVehiculo) REFERENCES VEHICULOS(idVehiculo)
 );
+```
 
--- Tabla ORDEN_MANTENIMIENTO
+#### Tabla ORDEN_MANTENIMIENTO
+```sql
 CREATE TABLE ORDEN_MANTENIMIENTO (
     idOrden INT PRIMARY KEY AUTO_INCREMENT,
     fecha DATE NOT NULL,
@@ -92,8 +117,10 @@ CREATE TABLE ORDEN_MANTENIMIENTO (
     FOREIGN KEY (idCliente) REFERENCES CLIENTES(idCliente),
     FOREIGN KEY (idVehiculo) REFERENCES VEHICULOS(idVehiculo)
 );
+```
 
--- Tabla MANTENIMIENTO
+#### Tabla MANTENIMIENTO
+```sql
 CREATE TABLE MANTENIMIENTO (
     idMantenimiento INT PRIMARY KEY AUTO_INCREMENT,
     tipo VARCHAR(100) NOT NULL,
@@ -101,9 +128,24 @@ CREATE TABLE MANTENIMIENTO (
     idOrden INT,
     FOREIGN KEY (idOrden) REFERENCES ORDEN_MANTENIMIENTO(idOrden)
 );
+```
 
--- Tabla TIPO_PAGO
+#### Tabla TIPO_PAGO
+```sql
 CREATE TABLE TIPO_PAGO (
     idTipoPago INT PRIMARY KEY AUTO_INCREMENT,
     metodo VARCHAR(50) NOT NULL
 );
+```
+
+## Relaciones
+- Un **Inventario** puede tener múltiples **Vehículos**.
+- Un **Concesionario** puede tener múltiples **Vehículos**.
+- Un **Vehículo** puede estar en múltiples **Ventas**.
+- Un **Vendedor** realiza múltiples **Ventas**.
+- Un **Cliente** puede realizar múltiples **Órdenes de Mantenimiento**.
+- Una **Orden de Mantenimiento** puede incluir múltiples **Mantenimientos**.
+- Una **Venta** está asociada a un **Tipo de Pago**.
+
+Este esquema permite gestionar la venta y mantenimiento de vehículos dentro del concesionario de manera eficiente.
+
